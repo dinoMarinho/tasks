@@ -6,6 +6,7 @@ import todayImage from '../../assets/imgs/today.jpg';
 
 // Importção de componentes
 import Task from '../components/Task';
+import AddTask from './AddTask';
 
 // Importa os estilos comuns do projeto
 import commonStyles from '../commonStyles';
@@ -18,12 +19,11 @@ import 'moment/locale/pt-br';
 // Importando icones
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
-
 export default class TaskList extends Component {
 
     state = {
         showDoneTasks: true,
+        showAddTask: false,
         visibleTasks: [],
         tasks: [
             {
@@ -39,6 +39,11 @@ export default class TaskList extends Component {
                 doneAt: null
             },
         ]
+    }
+
+    // Muda o icone de acordo com o estado do modal
+    iconModal = () => {
+        return !this.state.showAddTask ? "plus": "times";
     }
 
     // Método de ciculo de vida de um componente (basicamente chama a função ao app ser iniciado) 
@@ -81,6 +86,7 @@ export default class TaskList extends Component {
         const today = moment().locale('pt-br').format('ddd, D [de] MMMM');
         return (
             <SafeAreaView style={styles.container}>
+                <AddTask isVisible={this.state.showAddTask} onCancel={() => this.setState({ showAddTask: false })}/>
                 <ImageBackground source={todayImage} style={styles.background}>
                     <View style={styles.iconBar}>
                         {/* Chama a função de alternancia do filtro */}
@@ -103,6 +109,10 @@ export default class TaskList extends Component {
                             keyExtractor={item => `${item.id}`}
                             renderItem={({item}) => <Task {...item} toggleTask={this.toggleTask}/> }/>
                 </View>
+                
+                <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPress={() => this.setState({ showAddTask: true} )}>
+                    <Icon name={this.iconModal()} size={30} color={commonStyles.colors.secondary}/>
+                </TouchableOpacity>
             </SafeAreaView>
         );
     }
@@ -141,5 +151,16 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         justifyContent: 'flex-end',
         marginTop: Platform.OS == 'ios' ? 40 : 10
+    },
+    addButton: {
+        position: 'absolute',
+        right: 30,
+        bottom: 30,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: commonStyles.colors.today,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
