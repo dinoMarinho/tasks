@@ -2,5 +2,7 @@
 
 Src
 ╚ components
+    ╚ #2 - Task
 ╚ screens
     ╚ #1 - TaskList 
+    ╚ #3 - AddTask
