@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import { SafeAreaView, View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform, Alert} from 'react-native';
 
+// Importando o async-storage
+import AsyncStorage from '@react-native-community/async-storage';
+
 // Importação de imagens
 import todayImage from '../../assets/imgs/today.jpg';
 
@@ -19,26 +22,19 @@ import 'moment/locale/pt-br';
 // Importando icones
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+// Define o estado inicial da Aplicação
+const initialState = {
+    showDoneTasks: false,
+    showAddTask: false,
+    visibleTasks: [],
+    tasks: []
+}
+
+
 export default class TaskList extends Component {
 
     state = {
-        showDoneTasks: true,
-        showAddTask: false,
-        visibleTasks: [],
-        tasks: [
-            {
-                id: Math.random(),
-                desc: 'Tarefa #1',
-                estimateAt: new Date(),
-                doneAt: new Date()
-            },
-            {
-                id: Math.random(),
-                desc: 'Tarefa #2',
-                estimateAt: new Date(),
-                doneAt: null
-            },
-        ]
+        ...initialState
     }
 
     // Muda o icone de acordo com o estado do modal
@@ -47,8 +43,12 @@ export default class TaskList extends Component {
     }
 
     // Método de ciculo de vida de um componente (basicamente chama a função ao app ser iniciado) 
-    componentDidMount = () => {
-        this.filterTasks();
+    componentDidMount = async () => {
+        // Pega o item do AsyncStorage e só prossegue quando terminar
+        const stateString = await AsyncStorage.getItem('tasksState');
+        // Converte toda a informação em Json
+        const state = JSON.parse(stateString) || initialState;
+        this.setState(state,this.filterTasks);
     }
 
     // Muda o estado do componente de acordo com o botão do filtro
@@ -67,6 +67,8 @@ export default class TaskList extends Component {
         }
 
         this.setState({visibleTasks});
+        // Cria um item no armazenamento interno do dispositivo e converte toda a informação em linhas
+        AsyncStorage.setItem('tasksState',JSON.stringify(this.state));
     }
 
     // Função que define se a tarefa está marcada ou não
