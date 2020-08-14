@@ -100,6 +100,12 @@ export default class TaskList extends Component {
         this.setState({tasks, showAddTask: false}, this.filterTasks);
     }
 
+    // Função que deleta a tarefa a partir do componente filho Task
+    deleteTask = id => {
+        const tasks = this.state.tasks.filter(task => task.id != id);
+        this.setState({tasks}, this.filterTasks);
+    }
+
     render() {
         // Pega a data do dia atual ex.: Quarta, 4 de Agosto
         const today = moment().locale('pt-br').format('ddd, D [de] MMMM');
@@ -127,7 +133,7 @@ export default class TaskList extends Component {
                  */}
                    <FlatList data={this.state.visibleTasks} 
                             keyExtractor={item => `${item.id}`}
-                            renderItem={({item}) => <Task {...item} toggleTask={this.toggleTask}/> }/>
+                            renderItem={({item}) => <Task {...item} onToggleTask={this.toggleTask} onDelete={this.deleteTask}/> }/>
                 </View>
                 
                 <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPress={() => this.setState({ showAddTask: true} )}>
