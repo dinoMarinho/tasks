@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { SafeAreaView, View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform} from 'react-native';
+import { SafeAreaView, View, Text, ImageBackground, StyleSheet, FlatList, TouchableOpacity, Platform, Alert} from 'react-native';
 
 // Importação de imagens
 import todayImage from '../../assets/imgs/today.jpg';
@@ -81,12 +81,32 @@ export default class TaskList extends Component {
         this.setState({ tasks }, this.filterTasks);
     }
 
+    // Função que adiciona uma tarefa a lista a partir do componente AddTask
+    addTask = newTask => {
+        if(!newTask.desc || !newTask.desc.trim()) {
+            Alert.alert('Dados Invalidos','Descrição não informada');
+            return;
+        }
+
+        const tasks = [...this.state.tasks];
+        // Junta o array com o que foi passado pelo filho
+        tasks.push({
+            id: Math.random(),
+            desc: newTask.desc,
+            estimateAt: newTask.date,
+            doneAt: null
+        });
+
+        this.setState({tasks, showAddTask: false}, this.filterTasks);
+    }
+
     render() {
         // Pega a data do dia atual ex.: Quarta, 4 de Agosto
         const today = moment().locale('pt-br').format('ddd, D [de] MMMM');
         return (
             <SafeAreaView style={styles.container}>
-                <AddTask isVisible={this.state.showAddTask} onCancel={() => this.setState({ showAddTask: false })}/>
+                <AddTask isVisible={this.state.showAddTask} onCancel={() => this.setState({ showAddTask: false })}
+                    onSave={this.addTask}/>
                 <ImageBackground source={todayImage} style={styles.background}>
                     <View style={styles.iconBar}>
                         {/* Chama a função de alternancia do filtro */}
