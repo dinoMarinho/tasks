@@ -1,0 +1,6 @@
+# Este arquivo descreve a trajetoria de desenvolvimento dos componentes
+
+Src
+╚ components
+╚ screens
+    ╚ #1 - TaskList 
