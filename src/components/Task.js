@@ -5,7 +5,7 @@ import {View, Text, StyleSheet, TouchableWithoutFeedback} from 'react-native';
 import commonStyles from '../commonStyles';
 
 // Importando icones
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 // Importa o modulo de data/hora no projeto
 import moment from 'moment';
